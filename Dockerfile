@@ -1,4 +1,4 @@
-FROM debian
+FROM debian:jessie-slim
 
 # Set up LLMP server
 RUN apt-get update && apt-get upgrade -y
