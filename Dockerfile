@@ -1,8 +1,11 @@
 FROM debian:jessie-slim
 
-# Set up LLMP server
+# Housekeep the system
 RUN apt-get update -y && apt-get upgrade -y
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y wget
+RUN (echo "Europe/Moscow" | tee /etc/timezone) && dpkg-reconfigure --frontend noninteractive tzdata
+
+# Set up LLMP server
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y lighttpd php5-cgi php5-mysql unzip mysql-server mysql-client
 RUN lighttpd-enable-mod fastcgi
 RUN lighttpd-enable-mod fastcgi-php
