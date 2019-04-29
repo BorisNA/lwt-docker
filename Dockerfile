@@ -2,11 +2,12 @@ FROM debian:jessie-slim
 
 # Housekeep the system
 RUN apt-get update -y && apt-get upgrade -y
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y wget
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y wget locales
+RUN (sed -i.bak -e 's/# \(tr_TR.U\)/\1/' -e 's/# \(en_US.U\)/\1/' /etc/locale.gen) && dpkg-reconfigure --frontend noninteractive locales
 RUN (echo "Europe/Moscow" | tee /etc/timezone) && dpkg-reconfigure --frontend noninteractive tzdata
 
 # Set up LLMP server
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y lighttpd php5-cgi php5-mysql unzip mysql-server mysql-client
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y lighttpd php5-cgi php5-mysql unzip mysql-server mysql-client php5-intl
 RUN lighttpd-enable-mod fastcgi
 RUN lighttpd-enable-mod fastcgi-php
 RUN rm /var/www/html/index.lighttpd.html
@@ -24,8 +25,8 @@ RUN mkdir /tmp/dom && unzip /tmp/dom.zip -d /tmp/dom/ && cp /tmp/dom/simple_html
 RUN chmod -R 755 /var/www/html
 
 # Install my tureng_api
-ADD tureng_api.php /var/www/html/tureng_api.php
-RUN chmod 755 /var/www/html/tureng_api.php
+ADD glosbe_api.php /var/www/html/glosbe_api.php
+RUN chmod 755 /var/www/html/glosbe_api.php
 
 EXPOSE 80
 
