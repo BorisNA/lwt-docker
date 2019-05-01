@@ -92,7 +92,8 @@ $phrase = mb_strtolower(trim(stripTheSlashesIfNeeded($_REQUEST["phrase"])), 'UTF
 // ## Fetch translation and morph data
 
 // ### Get stem and morph
-//     Out: $org_stem, $org_stems, $org_parses, $org_spars[][] - sorted morphs by stems
+//     Out: $org_stem - the most probable stem, $org_stems, 
+//          $org_parse - the most probable morph, $org_parses, $org_spars[][] - morphs sorted by stems
 
 
 
@@ -134,10 +135,11 @@ if( $tran )
 	preg_match_all( '/org\/wiki\/([^"]*)/', $tran->innertext, 
 		$org_stems, PREG_PATTERN_ORDER );
 	$org_stems = $org_stems[1]; // 0 is the array of full matches
-	$org_stem = $org_stems[0];
+	$org_stem = $org_stems[0]; // The most probable stem
 	foreach( $tran->find("li") as $parse ) {
 		$org_parses[] = $parse->plaintext;
 	}
+	$org_parse = $org_parses[0]; // The mos probable morph
 	$org_spars = array(); // Sorted parses
 	foreach( $org_parses as $mr ) {
 		if( ! preg_match('/^([^&]+)(&lt;)?/',$mr, $stm) ) { continue; }
@@ -472,15 +474,22 @@ foreach($org_parses as $gram) {
 echo "</p>\r\n";
 echo "<hr/>\r\n";
 *************/
-echo '<p>';
+$parses = array();
+$parses[] = $org_parse;
 foreach($org_spars as $stm => $mrs) {
     foreach( array_slice($mrs,0,4) as $gram ) { // TODO: make a collapsible list of all morphs
+	if( $gram == $org_parse ) { continue; }
+	$parses[] = $gram;
+    }
+}
+
+echo '<p>';
+foreach($parses as $gram) {
 	echo '<span class="click" title="' . prepare_textdata_js($gram) . '" onclick="addRomanization(' . prepare_textdata_js($gram) . ');"><img style="vertical-align: text-bottom;" src="icn/card--plus.png" title="Copy rom" alt="Copy" /></span>' . "&nbsp;&nbsp;";
         // addInfoToTranslation
         $gram = preg_replace('/&lt;([^&]+)&gt;/','<a href="#" onclick="addInfoToTranslation('."'<$1>'".')">$0</a>',$gram);
         echo $gram;
         echo "<br />\r\n";
-    }
 }
 echo "</p>\r\n";
 
