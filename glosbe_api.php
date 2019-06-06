@@ -101,16 +101,17 @@ $trmorph_url = 'http://coltekin.net/cagri/trmorph/index.php';
 $context  = stream_context_create( array( 
   'http' => array(
        'header'  =>
-'Accept: text/html
-Accept-Language: en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7,de;q=0.6
-Cache-Control: max-age=0
-Connection: close
-Content-Type: application/x-www-form-urlencoded
-Host: coltekin.net
-Origin: http://coltekin.net
-Referer: http://coltekin.net/cagri/trmorph/index.php
-Upgrade-Insecure-Requests: 1
-User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36',
+"Accept: text/html\r\n" .
+"Accept-Language: en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7,de;q=0.6\r\n" .
+"Cache-Control: max-age=0\r\n" .
+"Connection: close\r\n" .
+"Content-Type: application/x-www-form-urlencoded\r\n" .
+"Host: coltekin.net\r\n" .
+"Origin: http://coltekin.net\r\n" .
+"Referer: http://coltekin.net/cagri/trmorph/index.php\r\n" .
+"Upgrade-Insecure-Requests: 1\r\n" .
+"User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36\r\n"
+,
        'method'  => 'POST',
        'content' => http_build_query(
 	   array('word' => $phrase,'submit' => 'Analyze')
